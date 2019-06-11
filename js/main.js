@@ -39,7 +39,7 @@ var renderAd = function (ad) {
   var adElement = similarAdTemplate.cloneNode(true);
   adElement.style = 'left: ' + ad.location.x + 'px; top: ' + ad.location.y + 'px;';
   adElement.querySelector('img').src = ad.author.avatar;
-  adElement.querySelector('img').alt = ad.type;
+  adElement.querySelector('img').alt = 'Сдаю ' + ad.offer.type;
   return adElement;
 };
 
