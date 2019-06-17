@@ -98,7 +98,51 @@ var getAddress = function (pin) {
   return Math.round(posX + MAIN_PIN_SIZE / 2) + ', ' + Math.round(posY + MAIN_PIN_SIZE + MAIN_PIN_TALE);
 };
 
-var address = adForm.querySelector('input[id=address]');
+var address = adForm.querySelector('#address');
 address.value = getAddress(mainPin);
 
 mainPin.addEventListener('mouseup', getAddress);
+
+// определяем минимальное значение цены
+var placeType = adForm.querySelector('#type');
+var price = adForm.querySelector('#price');
+
+var setMinPrice = function () {
+  if (placeType.value === 'bungalo') {
+    price.min = 0;
+    price.placeholder = '0';
+  }
+
+  if (placeType.value === 'flat') {
+    price.min = 1000;
+    price.placeholder = '1000';
+  }
+
+  if (placeType.value === 'house') {
+    price.min = 5000;
+    price.placeholder = '5000';
+  }
+
+  if (placeType.value === 'palace') {
+    price.min = 10000;
+    price.placeholder = '10000';
+  }
+};
+
+placeType.addEventListener('change', setMinPrice);
+
+// синхронизация времени заезда и времени выезда
+
+var timeIn = adForm.querySelector('#timein');
+var timeOut = adForm.querySelector('#timeout');
+
+var synchronizeTimeOut = function () {
+  timeOut.value = timeIn.value;
+};
+
+var synchronizeTimeIn = function () {
+  timeIn.value = timeOut.value;
+};
+
+timeIn.addEventListener('change', synchronizeTimeOut);
+timeOut.addEventListener('change', synchronizeTimeIn);
