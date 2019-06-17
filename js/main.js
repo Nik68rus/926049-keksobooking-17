@@ -100,3 +100,5 @@ var getAddress = function (pin) {
 
 var address = adForm.querySelector('input[id=address]');
 address.value = getAddress(mainPin);
+
+mainPin.addEventListener('mouseup', getAddress);
