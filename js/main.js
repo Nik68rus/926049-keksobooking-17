@@ -2,9 +2,10 @@
 
 var ACCOMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var PIN_WIDTH = 50;
+var MAIN_PIN_SIZE = 65;
+var MAIN_PIN_TALE = 22;
 
 var cityMap = document.querySelector('.map');
-cityMap.classList.remove('map--faded');
 var similarListElement = cityMap.querySelector('.map__pins');
 
 var getRandomInRange = function (min, max) {
@@ -51,5 +52,53 @@ var pinAds = function (adList) {
   return fragment;
 };
 
-similarListElement.appendChild(pinAds(ads));
+// опишем неактивное состояние окна
 
+var fieldsetList = document.querySelectorAll('.ad-form fieldset');
+var adForm = document.querySelector('.ad-form');
+var filterForm = document.querySelector('.map__filters');
+
+var disactivatePage = function () {
+  if (!cityMap.classList.contains('map--faded')) {
+    cityMap.classList.add('map--faded');
+  }
+  if (!adForm.classList.contains('ad-form--disabled')) {
+    adForm.classList.remove('ad-form--disabled');
+  }
+  for (var i = 0; i < fieldsetList.length; i++) {
+    fieldsetList[i].disabled = true;
+  }
+  adForm.disabled = true;
+  filterForm.disabled = true;
+};
+
+disactivatePage();
+
+// опишем функцию активации окна
+
+var activatePage = function () {
+  cityMap.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  for (var i = 0; i < fieldsetList.length; i++) {
+    fieldsetList[i].disabled = false;
+  }
+  adForm.disabled = false;
+  filterForm.disabled = false;
+  similarListElement.appendChild(pinAds(ads));
+};
+
+var mainPin = document.querySelector('.map__pin--main');
+mainPin.addEventListener('click', activatePage);
+
+// реализуем заполнение поля с адресом
+
+var getAddress = function (pin) {
+  var posX = pin.offsetLeft;
+  var posY = pin.offsetTop;
+  return Math.round(posX + MAIN_PIN_SIZE / 2) + ', ' + Math.round(posY + MAIN_PIN_SIZE + MAIN_PIN_TALE);
+};
+
+var address = adForm.querySelector('input[id=address]');
+address.value = getAddress(mainPin);
+
+mainPin.addEventListener('mouseup', getAddress);
