@@ -4,6 +4,8 @@ var ACCOMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var PIN_WIDTH = 50;
 var MAIN_PIN_SIZE = 65;
 var MAIN_PIN_TALE = 22;
+var MIN_Y = 130;
+var MAX_Y = 630;
 
 var cityMap = document.querySelector('.map');
 var similarListElement = cityMap.querySelector('.map__pins');
@@ -25,7 +27,7 @@ var generateMock = function (amount) {
       },
       location: {
         x: getRandomInRange(PIN_WIDTH / 2, similarListElement.clientWidth - PIN_WIDTH / 2),
-        y: getRandomInRange(130, 630)
+        y: getRandomInRange(MIN_Y, MAX_Y)
       }
     };
   }
@@ -88,7 +90,7 @@ var activatePage = function () {
 };
 
 var mainPin = document.querySelector('.map__pin--main');
-mainPin.addEventListener('click', activatePage);
+// mainPin.addEventListener('click', activatePage);
 
 // реализуем заполнение поля с адресом
 
@@ -101,7 +103,7 @@ var getAddress = function (pin) {
 var address = adForm.querySelector('#address');
 address.value = getAddress(mainPin);
 
-mainPin.addEventListener('mouseup', getAddress);
+// mainPin.addEventListener('mouseup', getAddress);
 
 // определяем минимальное значение цены
 var placeType = adForm.querySelector('#type');
@@ -146,3 +148,49 @@ var synchronizeTimeIn = function () {
 
 timeIn.addEventListener('change', synchronizeTimeOut);
 timeOut.addEventListener('change', synchronizeTimeIn);
+
+// реализуем перетаскивание маркера мышью
+
+mainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  activatePage();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: moveEvt.clientX - startCoords.x,
+      y: moveEvt.clientY - startCoords.y
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    if (moveEvt.clientY > MIN_Y && moveEvt.clientY < MAX_Y) {
+      mainPin.style.top = (mainPin.offsetTop + shift.y) + 'px';
+    }
+    var coord = similarListElement.getBoundingClientRect();
+    if (moveEvt.clientX > coord.left && moveEvt.clientX < coord.left + similarListElement.clientWidth) {
+      mainPin.style.left = (mainPin.offsetLeft + shift.x) + 'px';
+    }
+    address.value = getAddress(mainPin);
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    address.value = getAddress(mainPin);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+
+});
