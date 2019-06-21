@@ -160,6 +160,13 @@ mainPin.addEventListener('mousedown', function (evt) {
     y: evt.clientY
   };
 
+  var insidePosition = {
+    toTop: evt.offsetY,
+    toLeft: evt.offsetX,
+    toRight: MAIN_PIN_SIZE - evt.offsetX,
+    toBottom: MAIN_PIN_SIZE + MAIN_PIN_TALE - evt.offsetY
+  };
+
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
@@ -168,16 +175,13 @@ mainPin.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY - startCoords.y
     };
 
-    startCoords = {
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
-    };
-
-    if (moveEvt.clientY > MIN_Y && moveEvt.clientY < MAX_Y) {
+    if (moveEvt.clientY - insidePosition.toTop + 10 > MIN_Y && moveEvt.clientY + insidePosition.toBottom < MAX_Y) {
+      startCoords.y = moveEvt.clientY;
       mainPin.style.top = (mainPin.offsetTop + shift.y) + 'px';
     }
     var coord = similarListElement.getBoundingClientRect();
-    if (moveEvt.clientX > coord.left && moveEvt.clientX < coord.left + similarListElement.clientWidth) {
+    if (moveEvt.clientX - insidePosition.toLeft > coord.left && moveEvt.clientX + insidePosition.toRight < coord.left + similarListElement.clientWidth) {
+      startCoords.x = moveEvt.clientX;
       mainPin.style.left = (mainPin.offsetLeft + shift.x) + 'px';
     }
     address.value = getAddress(mainPin);
