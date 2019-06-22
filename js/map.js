@@ -81,14 +81,14 @@
         startCoords.x = moveEvt.clientX;
         mainPin.style.left = (mainPin.offsetLeft + shift.x) + 'px';
       }
-      address.value = getAddress(mainPin);
+      window.form.address.value = getAddress(mainPin);
     };
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-      address.value = getAddress(mainPin);
+      window.form.address.value = getAddress(mainPin);
     };
 
     document.addEventListener('mousemove', onMouseMove);

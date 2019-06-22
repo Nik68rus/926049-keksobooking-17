@@ -88,6 +88,7 @@
   window.form = {
     adForm: adForm,
     fieldsetList: fieldsetList,
-    filterForm: filterForm
+    filterForm: filterForm,
+    address: address
   };
 })();
