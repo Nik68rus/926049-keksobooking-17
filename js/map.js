@@ -3,30 +3,57 @@
 (function () {
   var MAIN_PIN_SIZE = 65;
   var MAIN_PIN_TALE = 22;
-  var MIN_Y = 130;
-  var MAX_Y = 630;
 
-  var cityMap = document.querySelector('.map');
-  var mainPin = document.querySelector('.map__pin--main');
-  var similarListElement = cityMap.querySelector('.map__pins');
+  // активация окна по нажатию на главный пин
 
-  var similarAdTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-
-  var renderAd = function (ad) {
-    var adElement = similarAdTemplate.cloneNode(true);
-    adElement.style = 'left: ' + ad.location.x + 'px; top: ' + ad.location.y + 'px;';
-    adElement.querySelector('img').src = ad.author.avatar;
-    adElement.querySelector('img').alt = 'Сдаю ' + ad.offer.type;
-    return adElement;
-  };
-
-  var pinAds = function (adList) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < adList.length; i++) {
-      fragment.appendChild(renderAd(adList[i]));
+  window.init.mainPin.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    var adPins = window.init.activate();
+    for (var i = 0; i < adPins.length; i++) {
+      if (!adPins[i].classList.contains('map__pin--main')) {
+        adPins[i].addEventListener('click', onPinClick);
+      }
     }
-    return fragment;
+  });
+
+  var onPinClick = function (evt) {
+    var element = evt.target;
+    if (!element.classList.contains('map__pin')) {
+      element = element.parentElement;
+    }
+    if (element.classList.contains('map__pin') && !element.classList.contains('map__pin--main')) {
+      showCard(window.data.adverts[parseInt(element.dataset.index, 10)]);
+    }
   };
+
+  // отрисовка карточки
+
+  var showCard = function (data) {
+    var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+    var card = window.advert.createCard(data, cardTemplate);
+    var currentCard = window.init.map.querySelector('.map__card');
+    if (currentCard) {
+      window.init.map.removeChild(currentCard);
+    }
+    window.init.map.insertBefore(card, window.init.map.querySelector('.map__filters-container'));
+    currentCard = window.init.map.querySelector('.map__card');
+    var popupClose = currentCard.querySelector('.popup__close');
+    popupClose.addEventListener('click', function () {
+      closePopup();
+    });
+
+    var closePopup = function () {
+      window.init.map.removeChild(currentCard);
+      document.removeEventListener('keydown', onPopupEscPress);
+    };
+
+    var onPopupEscPress = function (evt) {
+      window.util.isEscEvent(evt, closePopup);
+    };
+
+    document.addEventListener('keydown', onPopupEscPress);
+  };
+    // функция определения адреса пина
 
   var getAddress = function (pin) {
     var posX = pin.offsetLeft;
@@ -34,23 +61,14 @@
     return Math.round(posX + MAIN_PIN_SIZE / 2) + ', ' + Math.round(posY + MAIN_PIN_SIZE + MAIN_PIN_TALE);
   };
 
-  // опишем функцию активации окна
+  var address = window.init.form.querySelector('#address');
+  address.value = getAddress(window.init.mainPin);
 
-  var activatePage = function () {
-    cityMap.classList.remove('map--faded');
-    window.form.adForm.classList.remove('ad-form--disabled');
-    for (var i = 0; i < window.form.fieldsetList.length; i++) {
-      window.form.fieldsetList[i].disabled = false;
-    }
-    window.form.adForm.disabled = false;
-    window.form.filterForm.disabled = false;
-    similarListElement.appendChild(pinAds(window.data.ads));
-  };
+  // реализуем перетаскивание маркера мышью
 
-
-  mainPin.addEventListener('mousedown', function (evt) {
+  window.init.mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    activatePage();
+    window.init.activate();
 
     var startCoords = {
       x: evt.clientX,
@@ -72,23 +90,23 @@
         y: moveEvt.clientY - startCoords.y
       };
 
-      if (moveEvt.clientY - insidePosition.toTop > MIN_Y && moveEvt.clientY + insidePosition.toBottom < MAX_Y) {
+      if (moveEvt.clientY - insidePosition.toTop + 10 > window.data.MIN_Y && moveEvt.clientY + insidePosition.toBottom < window.data.MAX_Y) {
         startCoords.y = moveEvt.clientY;
-        mainPin.style.top = (mainPin.offsetTop + shift.y) + 'px';
+        window.init.mainPin.style.top = (window.init.mainPin.offsetTop + shift.y) + 'px';
       }
-      var coord = similarListElement.getBoundingClientRect();
-      if (moveEvt.clientX - insidePosition.toLeft > coord.left && moveEvt.clientX + insidePosition.toRight < coord.left + similarListElement.clientWidth) {
+      var coord = window.init.similarList.getBoundingClientRect();
+      if (moveEvt.clientX - insidePosition.toLeft > coord.left && moveEvt.clientX + insidePosition.toRight < coord.left + window.init.similarList.clientWidth) {
         startCoords.x = moveEvt.clientX;
-        mainPin.style.left = (mainPin.offsetLeft + shift.x) + 'px';
+        window.init.mainPin.style.left = (window.init.mainPin.offsetLeft + shift.x) + 'px';
       }
-      window.form.address.value = getAddress(mainPin);
+      address.value = getAddress(window.init.mainPin);
     };
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-      window.form.address.value = getAddress(mainPin);
+      address.value = getAddress(window.init.mainPin);
     };
 
     document.addEventListener('mousemove', onMouseMove);
@@ -97,11 +115,7 @@
   });
 
   window.map = {
-    MAIN_PIN_SIZE: MAIN_PIN_SIZE,
-    MAIN_PIN_TALE: MAIN_PIN_TALE,
-    MIN_Y: MIN_Y,
-    MAX_Y: MAX_Y,
-    similarListElement: similarListElement,
-    cityMap: cityMap
+    getAddress: getAddress
   };
+
 })();
