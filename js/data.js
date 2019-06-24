@@ -1,37 +1,51 @@
 'use strict';
 
 (function () {
-  var PIN_WIDTH = 50;
   var ACCOMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
-  var cityMap = document.querySelector('.map');
-  var similarListElement = cityMap.querySelector('.map__pins');
-  var getRandomInRange = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
 
-  var generateMock = function (amount) {
+  /*
+  var TYPES = {
+    flat: {text: 'Квартира', minPrice: 1000},
+    house: {text: 'Дом', minPrice: 5000},
+    bungalo: {text: 'Бунгало', minPrice: 0},
+    palace: {text: 'Дворец', minPrice: 10000}
+  };*/
+
+  var AD_TITLES = ['Уютное гнездышко для молодоженов', 'Квартирка в центре для двоих', 'Шикарные аппартаменты', 'Квартира у метро', 'Студия для одного', 'Королевские аппартаменты'];
+  var AD_ADDRESS = ['г. Токио, ул. Советская, д. 15', 'г. Токио, ул. Пушкина, д. 20', 'г. Токио, ул. Гагарина, д. 7', 'г. Токио, ул. Интернациональная, д. 40'];
+  var MIN_Y = 130;
+  var MAX_Y = 630;
+
+  // функция генерации массива похожих объявлений
+
+  var generateData = function (amount) {
     var adverts = [];
     for (var i = 0; i < amount; i++) {
-      var j = i + 1;
       adverts[i] = {
         author: {
-          avatar: 'img/avatars/user0' + j + '.png'
+          avatar: 'img/avatars/user0' + (i + 1) + '.png'
         },
         offer: {
-          type: ACCOMODATION_TYPE[getRandomInRange(0, 3)]
+          type: ACCOMODATION_TYPE[window.util.getRandomInRange(0, 3)],
+          title: AD_TITLES[window.util.getRandomInRange(0, 5)],
+          address: AD_ADDRESS[window.util.getRandomInRange(0, 3)],
+          price: window.util.getRandomInRange(1, 20000),
         },
         location: {
-          x: getRandomInRange(PIN_WIDTH / 2, similarListElement.clientWidth - PIN_WIDTH / 2),
-          y: getRandomInRange(window.map.MIN_Y, window.map.MAX_Y)
+          x: window.util.getRandomInRange(0, window.init.similarList.clientWidth),
+          y: window.util.getRandomInRange(MIN_Y, MAX_Y)
         }
       };
     }
     return adverts;
   };
 
-  var ads = generateMock(8);
+  var adverts = generateData(8);
 
   window.data = {
-    ads: ads
+    adverts: adverts,
+    generateData: generateData,
+    MIN_Y: MIN_Y,
+    MAX_Y: MAX_Y
   };
 })();
