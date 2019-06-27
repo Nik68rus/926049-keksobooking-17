@@ -8,7 +8,7 @@
 
   window.init.mainPin.addEventListener('click', function (evt) {
     evt.preventDefault();
-    var adPins = window.init.activate();
+    window.init.activate();
   });
 
   var onPinClick = function (evt) {

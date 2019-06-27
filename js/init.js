@@ -38,7 +38,6 @@
     adForm.disabled = false;
     filterForm.disabled = false;
     window.backend.load(successHandler, errorHandler);
-    return similarListElement.querySelectorAll('.map__pin');
   };
 
   var pins = [];
@@ -54,11 +53,11 @@
     }
   };
 
-  var errorHandler = function (errorMessage) {
+  var errorHandler = function () {
     var errorTemplate = document.querySelector('#error').content.querySelector('.error');
     document.body.appendChild(errorTemplate);
     var tryAgainButton = errorTemplate.querySelector('.error__button');
-    tryAgainButton.addEventListener('click', function (){
+    tryAgainButton.addEventListener('click', function () {
       window.backend.load(successHandler, errorHandler);
     });
 
@@ -73,8 +72,6 @@
 
     document.addEventListener('keydown', onPopupEscPress);
   };
-
-
 
   window.init = {
     activate: activatePage,
