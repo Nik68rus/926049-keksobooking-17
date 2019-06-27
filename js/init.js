@@ -37,16 +37,53 @@
     }
     adForm.disabled = false;
     filterForm.disabled = false;
-    similarListElement.appendChild(window.advert.createPin(window.data.adverts));
+    window.backend.load(successHandler, errorHandler);
     return similarListElement.querySelectorAll('.map__pin');
   };
+
+  var pins = [];
+
+  var successHandler = function (adverts) {
+    var fragment = window.advert.createPin(adverts);
+    similarListElement.appendChild(fragment);
+    pins = similarListElement.querySelectorAll('.map__pin');
+    for (var i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pins[i].addEventListener('click', window.map.onPinClick);
+      }
+    }
+  };
+
+  var errorHandler = function (errorMessage) {
+    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+    document.body.appendChild(errorTemplate);
+    var tryAgainButton = errorTemplate.querySelector('.error__button');
+    tryAgainButton.addEventListener('click', function (){
+      window.backend.load(successHandler, errorHandler);
+    });
+
+    var closeError = function () {
+      document.body.removeChild(errorTemplate);
+      document.removeEventListener('keydown', onPopupEscPress);
+    };
+
+    var onPopupEscPress = function (evt) {
+      window.util.isEscEvent(evt, closeError);
+    };
+
+    document.addEventListener('keydown', onPopupEscPress);
+  };
+
+
 
   window.init = {
     activate: activatePage,
     map: cityMap,
     form: adForm,
     similarList: similarListElement,
-    mainPin: mainPin
+    mainPin: mainPin,
+    pins: pins,
+    successHandler: successHandler,
+    errorHandler: errorHandler
   };
-
 })();

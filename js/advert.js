@@ -23,12 +23,6 @@
   // функция отрисовки карточки на карте
 
   var renderCard = function (data, template) {
-    var cardInfo = {
-      adCapacity: '2 комнаты для 3 гостей',
-      adTime: 'Заезд после 14:00, выезд до 10:00',
-      adDescription: 'Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.'
-    };
-
     var cardElement = template.cloneNode(true);
     cardElement.style = 'left: 10px; top: 100px;';
     cardElement.querySelector('.popup__avatar').src = data.author.avatar;
@@ -37,9 +31,9 @@
     cardElement.querySelector('.popup__text--address').textContent = data.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = data.offer.price + ' ₽/ночь';
     cardElement.querySelector('.popup__type').textContent = data.offer.type;
-    cardElement.querySelector('.popup__text--capacity').textContent = cardInfo.adCapacity;
-    cardElement.querySelector('.popup__text--time').textContent = cardInfo.adTime;
-    cardElement.querySelector('.popup__description').textContent = cardInfo.adDescription;
+    cardElement.querySelector('.popup__text--capacity').textContent = data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей';
+    cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + data.offer.checkin + ', выезд до: ' + data.offer.checkout;
+    cardElement.querySelector('.popup__description').textContent = data.offer.description;
 
     return cardElement;
   };

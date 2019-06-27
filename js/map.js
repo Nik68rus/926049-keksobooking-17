@@ -9,11 +9,6 @@
   window.init.mainPin.addEventListener('click', function (evt) {
     evt.preventDefault();
     var adPins = window.init.activate();
-    for (var i = 0; i < adPins.length; i++) {
-      if (!adPins[i].classList.contains('map__pin--main')) {
-        adPins[i].addEventListener('click', onPinClick);
-      }
-    }
   });
 
   var onPinClick = function (evt) {
@@ -22,7 +17,7 @@
       element = element.parentElement;
     }
     if (element.classList.contains('map__pin') && !element.classList.contains('map__pin--main')) {
-      showCard(window.data.adverts[parseInt(element.dataset.index, 10)]);
+      showCard(window.backend.adList[parseInt(element.dataset.index, 10)]);
     }
   };
 
@@ -115,7 +110,8 @@
   });
 
   window.map = {
-    getAddress: getAddress
+    getAddress: getAddress,
+    onPinClick: onPinClick
   };
 
 })();
