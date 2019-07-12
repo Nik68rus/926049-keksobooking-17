@@ -30,11 +30,11 @@
     var newX = mainPin.offsetLeft + x;
     var newY = mainPin.offsetTop + y;
 
-    if (newY > MapArea.Y_MIN && newY < MapArea.Y_MAX && checkInside(posX, posY, mainPin)) {
+    if (newY > MapArea.Y_MIN && newY < MapArea.Y_MAX && checkInside(posX, posY, pinList)) {
       mainPin.style.top = newY + 'px';
     }
 
-    if (newX > 0 && newX < pinList.clientWidth - MainPin.SIZE && checkInside(posX, posY, mainPin)) {
+    if (newX > 0 && newX < pinList.clientWidth - MainPin.SIZE && checkInside(posX, posY, pinList)) {
       mainPin.style.left = newX + 'px';
     }
     address.value = getAddress(mainPin);
