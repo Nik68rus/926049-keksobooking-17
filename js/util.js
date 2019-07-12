@@ -1,30 +1,46 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
-
-  var isEscEvent = function (evt, action) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      action();
-    }
+  var isEscapeKey = function (evt) {
+    return evt.key === 'Escape' || evt.key === 'Esc';
   };
 
-  var isEnterEvent = function (evt, action) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      action();
-    }
+  var isEnterKey = function (evt) {
+    return evt.key === 'Enter';
   };
 
-  // функция генерации случайного числа в заданном диапазоне
+  var makeDragStart = function (onMove, onEnd) {
+    return function (evt) {
+      evt.preventDefault();
+      if (window.init.isPageActive === false) {
+        window.init.activate();
+      }
 
-  var getRandomInRange = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+      var onMouseMove = function (moveEvt) {
+        moveEvt.preventDefault();
+        onMove(moveEvt.movementX, moveEvt.movementY, moveEvt.clientX, moveEvt.clientY);
+      };
+
+      var onMouseUp = function (upEvt) {
+        upEvt.preventDefault();
+        document.removeEventListener('mousemove', onMouseMove);
+        return onEnd();
+      };
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp, {once: true});
+    };
   };
 
   window.util = {
-    isEscEvent: isEscEvent,
-    isEnterEvent: isEnterEvent,
-    getRandomInRange: getRandomInRange
+    isEscEvent: function (evt, action) {
+      return isEscapeKey && action();
+    },
+
+    isEnterEvent: function (evt, action) {
+      return isEnterKey && action();
+    },
+
+    makeDragStart: makeDragStart,
   };
 })();

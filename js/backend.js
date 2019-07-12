@@ -2,7 +2,6 @@
 
 (function () {
   var loadURL = 'https://js.dump.academy/keksobooking/data';
-  var ads = [];
 
   var load = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -12,9 +11,6 @@
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         onLoad(xhr.response);
-        for (var i = 0; i < xhr.response.length; i++) {
-          ads[i] = xhr.response[i];
-        }
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -31,7 +27,6 @@
 
   window.backend = {
     load: load,
-    adList: ads
   };
 
 })();

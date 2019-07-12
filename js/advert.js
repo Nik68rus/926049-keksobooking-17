@@ -3,43 +3,36 @@
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
 
-  var similarAdTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+  var mapPin = document.querySelector('#pin').content.querySelector('.map__pin');
 
-  // функция создания фрагмента с пинами
-
-  var getPinAds = function (adList) {
-    var fragment = document.createDocumentFragment();
-    adList.forEach(function (item, i) {
-      var adElement = similarAdTemplate.cloneNode(true);
-      adElement.dataset.index = i;
-      adElement.style = 'left: ' + (item.location.x - PIN_WIDTH / 2) + 'px; top: ' + (item.location.y - PIN_HEIGHT) + 'px;';
-      adElement.querySelector('img').src = item.author.avatar;
-      adElement.querySelector('img').alt = item.offer.title;
-      fragment.appendChild(adElement);
-    });
-    return fragment;
+  var renderPin = function (item, i) {
+    var pin = mapPin.cloneNode(true);
+    pin.style.left = item.location.x - PIN_WIDTH / 2 + 'px';
+    pin.style.top = item.location.y - PIN_HEIGHT + 'px';
+    pin.dataset.index = i;
+    pin.querySelector('img').src = item.author.avatar;
+    pin.querySelector('img').alt = item.offer.title;
+    return pin;
   };
 
   // функция отрисовки карточки на карте
 
   var renderCard = function (data, template) {
-    var cardElement = template.cloneNode(true);
-    cardElement.style = 'left: 10px; top: 100px;';
-    cardElement.querySelector('.popup__avatar').src = data.author.avatar;
-
-    cardElement.querySelector('.popup__title').textContent = data.offer.title;
-    cardElement.querySelector('.popup__text--address').textContent = data.offer.address;
-    cardElement.querySelector('.popup__text--price').textContent = data.offer.price + ' ₽/ночь';
-    cardElement.querySelector('.popup__type').textContent = data.offer.type;
-    cardElement.querySelector('.popup__text--capacity').textContent = data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей';
-    cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + data.offer.checkin + ', выезд до: ' + data.offer.checkout;
-    cardElement.querySelector('.popup__description').textContent = data.offer.description;
-
-    return cardElement;
+    var card = template.cloneNode(true);
+    card.style = 'left: 10px; top: 100px;';
+    card.querySelector('.popup__avatar').src = data.author.avatar;
+    card.querySelector('.popup__title').textContent = data.offer.title;
+    card.querySelector('.popup__text--address').textContent = data.offer.address;
+    card.querySelector('.popup__text--price').textContent = data.offer.price + ' ₽/ночь';
+    card.querySelector('.popup__type').textContent = data.offer.type;
+    card.querySelector('.popup__text--capacity').textContent = data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей';
+    card.querySelector('.popup__text--time').textContent = 'Заезд после ' + data.offer.checkin + ', выезд до: ' + data.offer.checkout;
+    card.querySelector('.popup__description').textContent = data.offer.description;
+    return card;
   };
 
   window.advert = {
-    createPin: getPinAds,
+    renderPin: renderPin,
     createCard: renderCard
   };
 })();
