@@ -1,57 +1,49 @@
 'use strict';
-(function (makeDragStart) {
+(function (makeDragStart, activate, MapArea, MainPinSize) {
   var mainPin = document.querySelector('.map__pin--main');
-  var cityMap = document.querySelector('.map');
-  var pinList = cityMap.querySelector('.map__pins');
   var address = document.querySelector('#address');
-
-  var MapArea = {
-    Y_MIN: 130,
-    Y_MAX: 630,
+  var notActivePinCoords = {
+    x: mainPin.offsetLeft + MainPinSize.WIDTH_HALF,
+    y: mainPin.offsetTop + MainPinSize.HEIGHT_HALF,
   };
 
-  var MainPin = {
-    SIZE: 65,
-    TALE: 22,
+  var renderMainPin = function (x, y) {
+    mainPin.style.left = x + 'px';
+    mainPin.style.top = y + 'px';
   };
 
-  var checkInside = function (x, y, object) {
-    var coords = object.getBoundingClientRect();
-    return (x > coords.left && x < coords.right) || (y > coords.top && y < coords.bottom);
+  var getPinCoords = function (pin) {
+    return {
+      x: pin.offsetLeft + MainPinSize.WIDTH_HALF,
+      y: pin.offsetTop + MainPinSize.HEIGHT_WITH_POINTER,
+    };
   };
 
-  var getAddress = function (pin) {
-    var posX = pin.offsetLeft;
-    var posY = pin.offsetTop;
-    return Math.round(posX + MainPin.SIZE / 2) + ', ' + Math.round(posY + MainPin.SIZE + MainPin.TALE);
+  var renderAddress = function (coords) {
+    address.value = coords.x + ', ' + coords.y;
   };
 
-  var onPinDragMove = function (x, y, posX, posY) {
-    var newX = mainPin.offsetLeft + x;
-    var newY = mainPin.offsetTop + y;
+  renderAddress(notActivePinCoords);
 
-    if (newY > MapArea.Y_MIN && newY < MapArea.Y_MAX && checkInside(posX, posY, pinList)) {
-      mainPin.style.top = newY + 'px';
-    }
-
-    if (newX > 0 && newX < pinList.clientWidth - MainPin.SIZE && checkInside(posX, posY, pinList)) {
-      mainPin.style.left = newX + 'px';
-    }
-    address.value = getAddress(mainPin);
-
+  var onPinStart = function () {
+    return {
+      x: mainPin.offsetLeft,
+      y: mainPin.offsetTop,
+    };
   };
 
-  var preventDefaultClick = function (evt) {
-    evt.preventDefault();
+  var onPinMove = function (x, y) {
+    x = Math.min(Math.max(x, MapArea.LEFT), MapArea.RIGHT);
+    y = Math.min(Math.max(y, MapArea.TOP), MapArea.BOTTOM);
+
+    renderMainPin(x, y);
+    renderAddress(getPinCoords(mainPin));
   };
 
-  var onPinDragEnd = function () {
-    mainPin.addEventListener('click', preventDefaultClick, {once: true});
-  };
-
-  var onPinDragStart = makeDragStart(onPinDragMove, onPinDragEnd);
+  var onPinDragStart = makeDragStart(onPinStart, onPinMove);
 
   mainPin.addEventListener('mousedown', onPinDragStart);
+  mainPin.addEventListener('click', activate, {once: true});
 
 
-})(window.util.makeDragStart);
+})(window.util.makeDragStart, window.init.activate, window.constants.MapArea, window.constants.MainPinSize);

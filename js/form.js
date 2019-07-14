@@ -1,18 +1,12 @@
 'use strict';
-(function () {
+(function (offerTypeToMinPrice) {
   var adForm = document.querySelector('.ad-form');
-
-
-  // определяем минимальное значение цены
   var placeTypeInput = adForm.querySelector('#type');
   var priceInput = adForm.querySelector('#price');
+  var timeIn = adForm.querySelector('#timein');
+  var timeOut = adForm.querySelector('#timeout');
 
-  var offerTypeToMinPrice = {
-    bungalo: 0,
-    flat: 1000,
-    house: 5000,
-    palace: 10000,
-  };
+  // определяем минимальное значение цены
 
   var onTypeChange = function (evt) {
     var minPrice = offerTypeToMinPrice[evt.target.value];
@@ -21,22 +15,18 @@
     priceInput.placeholder = minPrice;
   };
 
-  placeTypeInput.addEventListener('change', onTypeChange);
-
   // синхронизация времени заезда и времени выезда
 
-  var timeIn = adForm.querySelector('#timein');
-  var timeOut = adForm.querySelector('#timeout');
-
-  var synchronizeTimeOut = function () {
+  var onTimeInChange = function () {
     timeOut.value = timeIn.value;
   };
 
-  var synchronizeTimeIn = function () {
+  var onTimeOutChange = function () {
     timeIn.value = timeOut.value;
   };
 
-  timeIn.addEventListener('change', synchronizeTimeOut);
-  timeOut.addEventListener('change', synchronizeTimeIn);
-})();
+  placeTypeInput.addEventListener('change', onTypeChange);
+  timeIn.addEventListener('change', onTimeInChange);
+  timeOut.addEventListener('change', onTimeOutChange);
+})(window.constants.offerTypeToMinPrice);
 

@@ -9,22 +9,30 @@
     return evt.key === 'Enter';
   };
 
-  var makeDragStart = function (onMove, onEnd) {
+  var setDisabled = function (element) {
+    element.disabled = true;
+  };
+
+  var unsetDisabled = function (element) {
+    element.disabled = false;
+  };
+
+  var makeDragStart = function (onStart, onMove) {
     return function (evt) {
       evt.preventDefault();
-      if (window.init.isPageActive === false) {
-        window.init.activate();
-      }
+
+      var start = onStart(evt);
+      start.x = start.x || 0;
+      start.y = start.y || 0;
 
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();
-        onMove(moveEvt.movementX, moveEvt.movementY, moveEvt.clientX, moveEvt.clientY);
+        onMove(start.x + moveEvt.clientX - evt.clientX, start.y + moveEvt.clientY - evt.clientY);
       };
 
       var onMouseUp = function (upEvt) {
         upEvt.preventDefault();
         document.removeEventListener('mousemove', onMouseMove);
-        return onEnd();
       };
 
       document.addEventListener('mousemove', onMouseMove);
@@ -42,5 +50,7 @@
     },
 
     makeDragStart: makeDragStart,
+    setDisabled: setDisabled,
+    unsetDisabled: unsetDisabled,
   };
 })();

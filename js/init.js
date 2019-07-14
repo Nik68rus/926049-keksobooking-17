@@ -1,8 +1,7 @@
 'use strict';
-(function (load) {
+(function (load, setDisabled, unsetDisabled) {
   var cityMap = document.querySelector('.map');
   var pinList = cityMap.querySelector('.map__pins');
-  var isPageActive = false;
   var pins = [];
 
   // опишем неактивное состояние окна
@@ -10,32 +9,40 @@
   var adForm = document.querySelector('.ad-form');
   var fieldsetList = document.querySelectorAll('.ad-form fieldset');
   var filterForm = document.querySelector('.map__filters');
+  var main = document.querySelector('main');
+  var errorMessage = document.querySelector('#error').content.querySelector('.error');
+  var tryAgainButton = errorMessage.querySelector('.error__button');
+  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  var filtersContainer = cityMap.querySelector('.map__filters-container');
+  var currentCard = cityMap.querySelector('.map__card');
+
+
 
   var successHandler = function (data) {
     pins = data;
   };
 
-  var errorHandler = function () {
-    var errorMessage = document.querySelector('#error').content.querySelector('.error');
-    var tryAgainButton = errorMessage.querySelector('.error__button');
-
-    document.body.appendChild(errorMessage);
-    tryAgainButton.addEventListener('click', window.backend.load(successHandler, errorHandler));
-
-    var closeError = function () {
-      document.body.removeChild(errorMessage);
-      document.removeEventListener('keydown', onPopupEscPress);
-      tryAgainButton.removeEventListener('click', window.backend.load(successHandler, errorHandler));
-    };
-
-    var onPopupEscPress = function (evt) {
-      window.util.isEscEvent(evt, closeError);
-    };
-
-    document.addEventListener('keydown', onPopupEscPress);
+  var closeError = function () {
+    document.removeEventListener('keydown', onPopupEscPress);
+    tryAgainButton.removeEventListener('click', loadData);
+    main.removeChild(errorMessage);
   };
 
-  load(successHandler, errorHandler);
+  var onPopupEscPress = function (evt) {
+    window.util.isEscEvent(evt, closeError);
+  };
+
+  var errorHandler = function () {
+    main.appendChild(errorMessage);
+    document.addEventListener('keydown', onPopupEscPress);
+    tryAgainButton.addEventListener('click', loadData);
+  };
+
+  var loadData = function () {
+    load(successHandler, errorHandler);
+  };
+
+  loadData();
 
   var disactivatePage = function () {
     if (!cityMap.classList.contains('map--faded')) {
@@ -44,12 +51,9 @@
     if (!adForm.classList.contains('ad-form--disabled')) {
       adForm.classList.remove('ad-form--disabled');
     }
-    fieldsetList.forEach(function (item) {
-      item.disabled = true;
-    });
-    adForm.disabled = true;
-    filterForm.disabled = true;
-    isPageActive = false;
+    fieldsetList.forEach(setDisabled);
+    setDisabled(adForm);
+    setDisabled(filterForm);
   };
 
   disactivatePage();
@@ -59,12 +63,9 @@
   var activatePage = function () {
     cityMap.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
-    fieldsetList.forEach(function (item) {
-      item.disabled = false;
-    });
-    adForm.disabled = false;
-    filterForm.disabled = false;
-    isPageActive = true;
+    fieldsetList.forEach(unsetDisabled);
+    unsetDisabled(adForm);
+    unsetDisabled(filterForm);
     renderPins(pins);
   };
 
@@ -90,30 +91,26 @@
 
   // отрисовка карточки
 
+  var closeCard = function (card) {
+    cityMap.removeChild(card);
+    document.removeEventListener('keydown', onCardEscPress);
+  };
+
+  var onCardEscPress = function (evt) {
+    window.util.isEscEvent(evt, closeCard(currentCard));
+  };
+
   var showCard = function (data) {
-    var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
     var card = window.advert.createCard(data, cardTemplate);
-    var currentCard = cityMap.querySelector('.map__card');
     if (currentCard) {
       cityMap.removeChild(currentCard);
     }
-    cityMap.insertBefore(card, cityMap.querySelector('.map__filters-container'));
+    cityMap.insertBefore(card, filtersContainer);
     currentCard = cityMap.querySelector('.map__card');
     var popupClose = currentCard.querySelector('.popup__close');
-    popupClose.addEventListener('click', function () {
-      closePopup();
-    });
-
-    var closePopup = function () {
-      cityMap.removeChild(currentCard);
-      document.removeEventListener('keydown', onPopupEscPress);
-    };
-
-    var onPopupEscPress = function (evt) {
-      window.util.isEscEvent(evt, closePopup);
-    };
-
-    document.addEventListener('keydown', onPopupEscPress);
+    popupClose.addEventListener('click', closeCard(currentCard));
+    console.log(currentCard);
+    document.addEventListener('keydown', onCardEscPress);
   };
 
   window.init = {
@@ -121,6 +118,6 @@
     pins: pins,
     successHandler: successHandler,
     errorHandler: errorHandler,
-    isPageActive: isPageActive,
   };
-})(window.backend.load);
+
+})(window.backend.load, window.util.setDisabled, window.util.unsetDisabled);
