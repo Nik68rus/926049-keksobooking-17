@@ -3,6 +3,7 @@
   var cityMap = document.querySelector('.map');
   var pinList = cityMap.querySelector('.map__pins');
   var pins = [];
+  var housingType = document.querySelector('#housing-type');
 
   // опишем неактивное состояние окна
 
@@ -66,13 +67,32 @@
     renderPins(pins);
   };
 
+  var onHousingTypeChange = function () {
+    var showedPins = pinList.querySelectorAll('.map__pin');
+    showedPins.forEach(function (item) {
+      if (!item.classList.contains('map__pin--main')) {
+        pinList.removeChild(item);
+      }
+    });
+    if (housingType.value === 'any') {
+      renderPins(pins);
+    } else {
+      renderPins(pins.filter(function (advert) {
+        return advert.offer.type === housingType.value;
+      }));
+    }
+  };
+
   var renderPins = function (data) {
     var fragment = document.createDocumentFragment();
-    data.forEach(function (item, i) {
-      var pin = window.advert.renderPin(item, i);
-      fragment.appendChild(pin);
-      pin.addEventListener('click', onPinClick);
-    });
+
+    data
+      .slice(0, 5)
+      .forEach(function (item, i) {
+        var pin = window.advert.renderPin(item, i);
+        fragment.appendChild(pin);
+        pin.addEventListener('click', onPinClick);
+      });
     pinList.appendChild(fragment);
   };
 
@@ -82,7 +102,10 @@
       element = element.parentElement;
     }
     if (element.classList.contains('map__pin') && !element.classList.contains('map__pin--main')) {
-      showCard(pins[parseInt(element.dataset.index, 10)]);
+      showCard(pins.filter(function (advert) {
+        return advert.offer.type === housingType.value;
+      })
+      .slice(0, 5)[parseInt(element.dataset.index, 10)]);
     }
   };
 
@@ -109,6 +132,8 @@
     popupClose.addEventListener('click', closeCard);
     document.addEventListener('keydown', onCardEscPress);
   };
+
+  housingType.addEventListener('change', onHousingTypeChange);
 
   window.init = {
     activate: activatePage,
