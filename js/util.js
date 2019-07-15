@@ -27,7 +27,10 @@
 
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();
-        onMove(start.x + moveEvt.clientX - evt.clientX, start.y + moveEvt.clientY - evt.clientY);
+        onMove(
+            start.x + moveEvt.clientX - evt.clientX,
+            start.y + moveEvt.clientY - evt.clientY
+        );
       };
 
       var onMouseUp = function (upEvt) {

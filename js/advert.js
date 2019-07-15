@@ -1,6 +1,7 @@
 'use strict';
 (function (Pin, offerType) {
   var mapPin = document.querySelector('#pin').content.querySelector('.map__pin');
+  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
   var renderPin = function (item, i) {
     var pin = mapPin.cloneNode(true);
@@ -15,12 +16,11 @@
 
   // функция отрисовки карточки на карте
 
-  var renderCard = function (data, template) {
-    var card = template.cloneNode(true);
-    var offer = data.offer;
+  var renderCard = function (ad) {
+    var card = cardTemplate.cloneNode(true);
+    var offer = ad.offer;
 
-    card.style = 'left: 10px; top: 100px;';
-    card.querySelector('.popup__avatar').src = data.author.avatar;
+    card.querySelector('.popup__avatar').src = ad.author.avatar;
     card.querySelector('.popup__title').textContent = offer.title;
     card.querySelector('.popup__text--address').textContent = offer.address;
     card.querySelector('.popup__text--price').textContent = offer.price + ' ₽/ночь';

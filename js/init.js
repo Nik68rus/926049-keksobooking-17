@@ -12,11 +12,8 @@
   var main = document.querySelector('main');
   var errorMessage = document.querySelector('#error').content.querySelector('.error');
   var tryAgainButton = errorMessage.querySelector('.error__button');
-  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var filtersContainer = cityMap.querySelector('.map__filters-container');
   var currentCard = cityMap.querySelector('.map__card');
-
-
 
   var successHandler = function (data) {
     pins = data;
@@ -91,25 +88,25 @@
 
   // отрисовка карточки
 
-  var closeCard = function (card) {
-    cityMap.removeChild(card);
+  var closeCard = function () {
+    cityMap.removeChild(currentCard);
     document.removeEventListener('keydown', onCardEscPress);
+    currentCard = null;
   };
 
   var onCardEscPress = function (evt) {
-    window.util.isEscEvent(evt, closeCard(currentCard));
+    window.util.isEscEvent(evt, closeCard);
   };
 
   var showCard = function (data) {
-    var card = window.advert.createCard(data, cardTemplate);
+    var card = window.advert.createCard(data);
     if (currentCard) {
       cityMap.removeChild(currentCard);
     }
     cityMap.insertBefore(card, filtersContainer);
     currentCard = cityMap.querySelector('.map__card');
     var popupClose = currentCard.querySelector('.popup__close');
-    popupClose.addEventListener('click', closeCard(currentCard));
-    console.log(currentCard);
+    popupClose.addEventListener('click', closeCard);
     document.addEventListener('keydown', onCardEscPress);
   };
 
