@@ -1,30 +1,59 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
-
-  var isEscEvent = function (evt, action) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      action();
-    }
+  var isEscapeKey = function (evt) {
+    return evt.key === 'Escape' || evt.key === 'Esc';
   };
 
-  var isEnterEvent = function (evt, action) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      action();
-    }
+  var isEnterKey = function (evt) {
+    return evt.key === 'Enter';
   };
 
-  // функция генерации случайного числа в заданном диапазоне
+  var setDisabled = function (element) {
+    element.disabled = true;
+  };
 
-  var getRandomInRange = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  var unsetDisabled = function (element) {
+    element.disabled = false;
+  };
+
+  var makeDragStart = function (onStart, onMove) {
+    return function (evt) {
+      evt.preventDefault();
+
+      var start = onStart(evt);
+      start.x = start.x || 0;
+      start.y = start.y || 0;
+
+      var onMouseMove = function (moveEvt) {
+        moveEvt.preventDefault();
+        onMove(
+            start.x + moveEvt.clientX - evt.clientX,
+            start.y + moveEvt.clientY - evt.clientY
+        );
+      };
+
+      var onMouseUp = function (upEvt) {
+        upEvt.preventDefault();
+        document.removeEventListener('mousemove', onMouseMove);
+      };
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp, {once: true});
+    };
   };
 
   window.util = {
-    isEscEvent: isEscEvent,
-    isEnterEvent: isEnterEvent,
-    getRandomInRange: getRandomInRange
+    isEscEvent: function (evt, action) {
+      return isEscapeKey && action();
+    },
+
+    isEnterEvent: function (evt, action) {
+      return isEnterKey && action();
+    },
+
+    makeDragStart: makeDragStart,
+    setDisabled: setDisabled,
+    unsetDisabled: unsetDisabled,
   };
 })();

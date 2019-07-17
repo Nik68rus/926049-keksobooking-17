@@ -1,37 +1,55 @@
 'use strict';
 
 (function () {
-  var loadURL = 'https://js.dump.academy/keksobooking/data';
-  var ads = [];
+  var Url = {
+    POST: 'https://js.dump.academy/code-and-magick',
+    GET: 'https://js.dump.academy/keksobooking/data',
+  };
 
-  var load = function (onLoad, onError) {
+  var Method = {
+    GET: 'GET',
+    POST: 'POST',
+  };
+
+  var TIMEOUT = 10000;
+
+  var createRequest = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
+    xhr.timeout = TIMEOUT;
     xhr.responseType = 'json';
-    xhr.open('GET', loadURL);
-    xhr.send();
+
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        onLoad(xhr.response);
-        for (var i = 0; i < xhr.response.length; i++) {
-          ads[i] = xhr.response[i];
-        }
-      } else {
-        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      if (xhr.status < 200 || xhr.status > 300) {
+        onError('Данные не загрузились. Причин: ' + xhr.status + ' ' + xhr.statusText);
+        return;
       }
+      onLoad(xhr.response);
     });
+
     xhr.addEventListener('error', function () {
       onError('Произошла ошибка соединения');
     });
+
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
-    xhr.timeout = 10000; // 10s
 
+    return xhr;
   };
 
   window.backend = {
-    load: load,
-    adList: ads
+    load: function (onLoad, onError) {
+      var req = createRequest(onLoad, onError);
+      req.open(Method.GET, Url.GET);
+      req.send();
+    },
+
+    save: function (data, onLoad, onError) {
+      var req = createRequest(onLoad, onError);
+      req.open(Method.POST, Url.POST);
+      req.send(data);
+    },
+
   };
 
 })();

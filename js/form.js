@@ -1,47 +1,32 @@
 'use strict';
-(function () {
+(function (offerTypeToMinPrice) {
+  var adForm = document.querySelector('.ad-form');
+  var placeTypeInput = adForm.querySelector('#type');
+  var priceInput = adForm.querySelector('#price');
+  var timeIn = adForm.querySelector('#timein');
+  var timeOut = adForm.querySelector('#timeout');
+
   // определяем минимальное значение цены
-  var placeType = window.init.form.querySelector('#type');
-  var price = window.init.form.querySelector('#price');
 
-  var setMinPrice = function () {
-    if (placeType.value === 'bungalo') {
-      price.min = 0;
-      price.placeholder = '0';
-    }
-
-    if (placeType.value === 'flat') {
-      price.min = 1000;
-      price.placeholder = '1000';
-    }
-
-    if (placeType.value === 'house') {
-      price.min = 5000;
-      price.placeholder = '5000';
-    }
-
-    if (placeType.value === 'palace') {
-      price.min = 10000;
-      price.placeholder = '10000';
-    }
+  var onTypeChange = function (evt) {
+    var minPrice = offerTypeToMinPrice[evt.target.value];
+    priceInput.value = '';
+    priceInput.min = minPrice;
+    priceInput.placeholder = minPrice;
   };
-
-  placeType.addEventListener('change', setMinPrice);
 
   // синхронизация времени заезда и времени выезда
 
-  var timeIn = window.init.form.querySelector('#timein');
-  var timeOut = window.init.form.querySelector('#timeout');
-
-  var synchronizeTimeOut = function () {
+  var onTimeInChange = function () {
     timeOut.value = timeIn.value;
   };
 
-  var synchronizeTimeIn = function () {
+  var onTimeOutChange = function () {
     timeIn.value = timeOut.value;
   };
 
-  timeIn.addEventListener('change', synchronizeTimeOut);
-  timeOut.addEventListener('change', synchronizeTimeIn);
-})();
+  placeTypeInput.addEventListener('change', onTypeChange);
+  timeIn.addEventListener('change', onTimeInChange);
+  timeOut.addEventListener('change', onTimeOutChange);
+})(window.constants.offerTypeToMinPrice);
 
