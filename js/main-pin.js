@@ -10,7 +10,7 @@
 
   var getMainPinCoords = function (point) {
     return {
-      x: mainPin.offsetLeft + MainPinSize.WIDTH_HALF,
+      x: mainPin.offsetLeft + MainPinSize.RADIUS,
       y: mainPin.offsetTop + point,
     };
   };
@@ -19,7 +19,7 @@
     address.value = coords.x + ', ' + coords.y;
   };
 
-  renderAddress(getMainPinCoords(MainPinSize.HEIGHT_HALF));
+  renderAddress(getMainPinCoords(MainPinSize.RADIUS));
 
   var onPinStart = function () {
     return {
@@ -33,7 +33,7 @@
     y = Math.min(Math.max(y, MapArea.TOP), MapArea.BOTTOM);
 
     renderMainPin(x, y);
-    renderAddress(getMainPinCoords(MainPinSize.HEIGHT_WITH_POINTER));
+    renderAddress(getMainPinCoords(MainPinSize.HEIGHT));
   };
 
   var onPinDragStart = makeDragStart(onPinStart, onPinMove);

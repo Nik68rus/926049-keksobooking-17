@@ -1,18 +1,16 @@
 'use strict';
 (function () {
   var MainPinSize = {
-    WIDTH: 62,
-    HEIGHT: 58,
-    HEIGHT_WITH_POINTER: 80,
-    WIDTH_HALF: 31,
-    HEIGHT_HALF: 29,
+    WIDTH: 65,
+    HEIGHT: 80,
+    RADIUS: 32,
   };
 
-  var MapArea = {
+  var MapRect = {
+    LEFT: -32,
     TOP: 130,
+    RIGHT: 1200 - 32,
     BOTTOM: 630,
-    LEFT: -MainPinSize.WIDTH_HALF,
-    RIGHT: 1200 - MainPinSize.WIDTH_HALF,
   };
 
   var Pin = {
@@ -36,7 +34,7 @@
   };
 
   window.constants = {
-    MapArea: MapArea,
+    MapArea: MapRect,
     MainPinSize: MainPinSize,
     Pin: Pin,
     offerType: offerType,

@@ -2,7 +2,6 @@
 (function (load, setDisabled, unsetDisabled) {
   var cityMap = document.querySelector('.map');
   var pinList = cityMap.querySelector('.map__pins');
-  var pins = [];
   var housingType = document.querySelector('#housing-type');
 
   // опишем неактивное состояние окна
@@ -18,6 +17,9 @@
 
   var successHandler = function (data) {
     pins = data;
+    pins.forEach(function (item, i) {
+      item.id = i;
+    });
   };
 
   var closeError = function () {
@@ -40,8 +42,6 @@
     load(successHandler, errorHandler);
   };
 
-  loadData();
-
   var disactivatePage = function () {
     if (!cityMap.classList.contains('map--faded')) {
       cityMap.classList.add('map--faded');
@@ -53,8 +53,6 @@
     setDisabled(adForm);
     setDisabled(filterForm);
   };
-
-  disactivatePage();
 
   // опишем функцию активации окна
 
@@ -68,11 +66,9 @@
   };
 
   var onHousingTypeChange = function () {
-    var showedPins = pinList.querySelectorAll('.map__pin');
+    var showedPins = pinList.querySelectorAll('.map__pin:not(.map__pin--main)');
     showedPins.forEach(function (item) {
-      if (!item.classList.contains('map__pin--main')) {
-        pinList.removeChild(item);
-      }
+      pinList.removeChild(item);
     });
     if (housingType.value === 'any') {
       renderPins(pins);
@@ -85,7 +81,6 @@
 
   var renderPins = function (data) {
     var fragment = document.createDocumentFragment();
-
     data
       .slice(0, 5)
       .forEach(function (item, i) {
@@ -103,9 +98,8 @@
     }
     if (element.classList.contains('map__pin') && !element.classList.contains('map__pin--main')) {
       showCard(pins.filter(function (advert) {
-        return advert.offer.type === housingType.value;
-      })
-      .slice(0, 5)[parseInt(element.dataset.index, 10)]);
+        return advert.id === parseInt(element.dataset.index, 10);
+      })[0]);
     }
   };
 
@@ -132,6 +126,10 @@
     popupClose.addEventListener('click', closeCard);
     document.addEventListener('keydown', onCardEscPress);
   };
+
+  var pins = [];
+  loadData();
+  disactivatePage();
 
   housingType.addEventListener('change', onHousingTypeChange);
 
