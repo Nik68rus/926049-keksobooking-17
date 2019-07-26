@@ -43,6 +43,16 @@
     };
   };
 
+  var makeFragmentRender = function (render) {
+    return function (dataList) {
+      var fragment = document.createDocumentFragment();
+      dataList.forEach(function (data) {
+        fragment.appendChild(render(data));
+      });
+      return fragment;
+    };
+  };
+
   window.util = {
     isEscEvent: function (evt, action) {
       return isEscapeKey && action();
@@ -55,5 +65,6 @@
     makeDragStart: makeDragStart,
     setDisabled: setDisabled,
     unsetDisabled: unsetDisabled,
+    makeFragmentRender: makeFragmentRender,
   };
 })();
