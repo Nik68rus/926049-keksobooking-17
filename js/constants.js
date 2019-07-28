@@ -13,7 +13,7 @@
     BOTTOM: 630,
   };
 
-  var Pin = {
+  var PinSize = {
     WIDTH: 50,
     HEIGHT: 70,
     WIDTH_HALF: 25,
@@ -33,11 +33,23 @@
     palace: 10000,
   };
 
+  var PalaceCode = {
+    ROOMS: 0,
+    CAPACITY: 100,
+  };
+
+  var Photo = {
+    WIDTH: 45,
+    HEIGHT: 40,
+  };
+
   window.constants = {
     MapArea: MapRect,
     MainPinSize: MainPinSize,
-    Pin: Pin,
+    PinSize: PinSize,
     offerType: offerType,
     offerTypeToMinPrice: offerTypeToMinPrice,
+    PalaceCode: PalaceCode,
+    Photo: Photo,
   };
 })();

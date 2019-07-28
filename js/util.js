@@ -17,6 +17,14 @@
     element.disabled = false;
   };
 
+  var showElement = function (element) {
+    element.classList.remove('hidden');
+  };
+
+  var hideElement = function (element) {
+    element.classList.add('hidden');
+  };
+
   var makeDragStart = function (onStart, onMove) {
     return function (evt) {
       evt.preventDefault();
@@ -43,6 +51,22 @@
     };
   };
 
+  var makeDragOnce = function (onDrag) {
+    return function (evt) {
+      evt.preventDefault();
+
+      var onMouseDrag = function (dragEvt) {
+        dragEvt.preventDefault();
+        document.removeEventListener('mousemove', onMouseDrag);
+        document.removeEventListener('mouseup', onMouseDrag);
+        onDrag(dragEvt);
+      };
+
+      document.addEventListener('mousemove', onMouseDrag);
+      document.addEventListener('mouseup', onMouseDrag);
+    };
+  };
+
   var makeFragmentRender = function (render) {
     return function (dataList) {
       var fragment = document.createDocumentFragment();
@@ -53,9 +77,16 @@
     };
   };
 
+  var removeActivePin = function () {
+    var activePin = document.querySelector('.map__pin--active');
+    if (activePin !== null) {
+      activePin.classList.remove('map__pin--active');
+    }
+  };
+
   window.util = {
     isEscEvent: function (evt, action) {
-      return isEscapeKey && action();
+      return isEscapeKey(evt) && action();
     },
 
     isEnterEvent: function (evt, action) {
@@ -63,8 +94,12 @@
     },
 
     makeDragStart: makeDragStart,
+    makeDragOnce: makeDragOnce,
     setDisabled: setDisabled,
     unsetDisabled: unsetDisabled,
     makeFragmentRender: makeFragmentRender,
+    showElement: showElement,
+    hideElement: hideElement,
+    removeActivePin: removeActivePin,
   };
 })();

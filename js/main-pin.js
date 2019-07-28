@@ -1,5 +1,5 @@
 'use strict';
-(function (makeDragStart, activate, MapArea, MainPinSize) {
+(function (makeDragStart, makeDragOnce, activate, MapArea, MainPinSize) {
   var mainPin = document.querySelector('.map__pin--main');
   var address = document.querySelector('#address');
 
@@ -38,7 +38,13 @@
 
   var onPinDragStart = makeDragStart(onPinStart, onPinMove);
 
-  mainPin.addEventListener('mousedown', onPinDragStart);
-  mainPin.addEventListener('click', activate, {once: true});
+  var onPinChange = function () {
+    activate();
+  };
 
-})(window.util.makeDragStart, window.init.activate, window.constants.MapArea, window.constants.MainPinSize);
+  var onPinDragOnce = makeDragOnce(onPinChange);
+
+  mainPin.addEventListener('mousedown', onPinDragOnce, {once: true});
+  mainPin.addEventListener('mousedown', onPinDragStart);
+
+})(window.util.makeDragStart, window.util.makeDragOnce, window.init.activate, window.constants.MapArea, window.constants.MainPinSize);
