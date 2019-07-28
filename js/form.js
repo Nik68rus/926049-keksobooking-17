@@ -37,7 +37,6 @@
       } else {
         showElement(capacityOption);
       }
-      capacityInput.value = (roomNumber === PalaceCode.ROOMS) ? PalaceCode.CAPACITY : roomNumber;
       if (roomNumber === PalaceCode.ROOMS) {
         showElement(capacityInput.options[capacityInput.options.length - 1]);
       }

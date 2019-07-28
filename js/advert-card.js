@@ -1,5 +1,5 @@
 'use strict';
-(function (offerType, Photo, removeActivePin, makeFragmentRender) {
+(function (offerType, PhotoSize, removeActivePin, makeFragmentRender) {
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var map = document.querySelector('.map');
   var filterContainer = map.querySelector('.map__filters-container');
@@ -24,8 +24,8 @@
   var renderPhoto = function (url) {
     var node = document.createElement('img');
     node.classList.add('popup__photo');
-    node.width = Photo.WIDTH;
-    node.height = Photo.HEIGHT;
+    node.width = PhotoSize.WIDTH;
+    node.height = PhotoSize.HEIGHT;
     node.src = url;
     node.alt = 'Фотография жилья';
     return node;
@@ -58,13 +58,12 @@
     return mod10 === 1 ? one : five;
   };
 
-  var generateCapacityLine = function (rooms, guests) {
-    var line = rooms +
-                pluralize(rooms, ' комната ', ' комнаты ', ' комнат ') +
-                'для ' +
-                guests +
-                pluralize(guests, ' гостя ', ' гостей ', ' гостей ');
-    return line;
+  var getRoomEnding = function (offer) {
+    return pluralize(offer.rooms, 'комната', 'комнаты', 'комнат');
+  };
+
+  var getGuestEnding = function (offer) {
+    return pluralize(offer.guests, 'гостя', 'гостей', 'гостей');
   };
 
   var renderCard = function (ad) {
@@ -76,7 +75,8 @@
     card.querySelector('.popup__text--address').textContent = offer.address;
     card.querySelector('.popup__text--price').textContent = offer.price + ' ₽/ночь';
     card.querySelector('.popup__type').textContent = offerType[offer.type];
-    card.querySelector('.popup__text--capacity').textContent = generateCapacityLine(offer.rooms, offer.guests);
+    card.querySelector('.popup__text--capacity').textContent = offer.rooms + ' ' + getRoomEnding(offer) + ' для '
+                                                             + offer.guests + ' ' + getGuestEnding(offer);
     card.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin + ', выезд до: ' + offer.checkout;
     card.querySelector('.popup__description').textContent = offer.description;
     card.dataset.index = ad.id;
@@ -116,4 +116,4 @@
   window.advertCard = {
     showCard: showCard,
   };
-})(window.constants.offerType, window.constants.Photo, window.util.removeActivePin, window.util.makeFragmentRender);
+})(window.constants.offerType, window.constants.PhotoSize, window.util.removeActivePin, window.util.makeFragmentRender);
