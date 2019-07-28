@@ -1,46 +1,12 @@
 'use strict';
-(function (load, setDisabled, unsetDisabled) {
+(function (loadData, setDisabled, unsetDisabled) {
   var cityMap = document.querySelector('.map');
-  var pinList = cityMap.querySelector('.map__pins');
-  var pins = [];
-  var housingType = document.querySelector('#housing-type');
-
-  // опишем неактивное состояние окна
-
   var adForm = document.querySelector('.ad-form');
   var fieldsetList = document.querySelectorAll('.ad-form fieldset');
   var filterForm = document.querySelector('.map__filters');
-  var main = document.querySelector('main');
-  var errorMessage = document.querySelector('#error').content.querySelector('.error');
-  var tryAgainButton = errorMessage.querySelector('.error__button');
-  var filtersContainer = cityMap.querySelector('.map__filters-container');
-  var currentCard = cityMap.querySelector('.map__card');
+  var activeFlag = false;
 
-  var successHandler = function (data) {
-    pins = data;
-  };
-
-  var closeError = function () {
-    document.removeEventListener('keydown', onPopupEscPress);
-    tryAgainButton.removeEventListener('click', loadData);
-    main.removeChild(errorMessage);
-  };
-
-  var onPopupEscPress = function (evt) {
-    window.util.isEscEvent(evt, closeError);
-  };
-
-  var errorHandler = function () {
-    main.appendChild(errorMessage);
-    document.addEventListener('keydown', onPopupEscPress);
-    tryAgainButton.addEventListener('click', loadData);
-  };
-
-  var loadData = function () {
-    load(successHandler, errorHandler);
-  };
-
-  loadData();
+  // опишем неактивное состояние окна
 
   var disactivatePage = function () {
     if (!cityMap.classList.contains('map--faded')) {
@@ -52,9 +18,8 @@
     fieldsetList.forEach(setDisabled);
     setDisabled(adForm);
     setDisabled(filterForm);
+    activeFlag = false;
   };
-
-  disactivatePage();
 
   // опишем функцию активации окна
 
@@ -62,84 +27,16 @@
     cityMap.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     fieldsetList.forEach(unsetDisabled);
+    loadData();
     unsetDisabled(adForm);
     unsetDisabled(filterForm);
-    renderPins(pins);
+    activeFlag = true;
   };
-
-  var onHousingTypeChange = function () {
-    var showedPins = pinList.querySelectorAll('.map__pin');
-    showedPins.forEach(function (item) {
-      if (!item.classList.contains('map__pin--main')) {
-        pinList.removeChild(item);
-      }
-    });
-    if (housingType.value === 'any') {
-      renderPins(pins);
-    } else {
-      renderPins(pins.filter(function (advert) {
-        return advert.offer.type === housingType.value;
-      }));
-    }
-  };
-
-  var renderPins = function (data) {
-    var fragment = document.createDocumentFragment();
-
-    data
-      .slice(0, 5)
-      .forEach(function (item, i) {
-        var pin = window.advert.renderPin(item, i);
-        fragment.appendChild(pin);
-        pin.addEventListener('click', onPinClick);
-      });
-    pinList.appendChild(fragment);
-  };
-
-  var onPinClick = function (evt) {
-    var element = evt.target;
-    if (!element.classList.contains('map__pin')) {
-      element = element.parentElement;
-    }
-    if (element.classList.contains('map__pin') && !element.classList.contains('map__pin--main')) {
-      showCard(pins.filter(function (advert) {
-        return advert.offer.type === housingType.value;
-      })
-      .slice(0, 5)[parseInt(element.dataset.index, 10)]);
-    }
-  };
-
-  // отрисовка карточки
-
-  var closeCard = function () {
-    cityMap.removeChild(currentCard);
-    document.removeEventListener('keydown', onCardEscPress);
-    currentCard = null;
-  };
-
-  var onCardEscPress = function (evt) {
-    window.util.isEscEvent(evt, closeCard);
-  };
-
-  var showCard = function (data) {
-    var card = window.advert.createCard(data);
-    if (currentCard) {
-      cityMap.removeChild(currentCard);
-    }
-    cityMap.insertBefore(card, filtersContainer);
-    currentCard = cityMap.querySelector('.map__card');
-    var popupClose = currentCard.querySelector('.popup__close');
-    popupClose.addEventListener('click', closeCard);
-    document.addEventListener('keydown', onCardEscPress);
-  };
-
-  housingType.addEventListener('change', onHousingTypeChange);
 
   window.init = {
     activate: activatePage,
-    pins: pins,
-    successHandler: successHandler,
-    errorHandler: errorHandler,
+    disactivate: disactivatePage,
+    activeFlag: activeFlag,
   };
 
-})(window.backend.load, window.util.setDisabled, window.util.unsetDisabled);
+})(window.loading.loadData, window.util.setDisabled, window.util.unsetDisabled);

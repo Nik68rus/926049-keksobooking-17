@@ -1,21 +1,19 @@
 'use strict';
 (function () {
   var MainPinSize = {
-    WIDTH: 62,
-    HEIGHT: 58,
-    HEIGHT_WITH_POINTER: 80,
-    WIDTH_HALF: 31,
-    HEIGHT_HALF: 29,
+    WIDTH: 65,
+    HEIGHT: 80,
+    RADIUS: 32,
   };
 
-  var MapArea = {
+  var MapRect = {
+    LEFT: -32,
     TOP: 130,
+    RIGHT: 1200 - 32,
     BOTTOM: 630,
-    LEFT: -MainPinSize.WIDTH_HALF,
-    RIGHT: 1200 - MainPinSize.WIDTH_HALF,
   };
 
-  var Pin = {
+  var PinSize = {
     WIDTH: 50,
     HEIGHT: 70,
     WIDTH_HALF: 25,
@@ -35,11 +33,23 @@
     palace: 10000,
   };
 
+  var PalaceCode = {
+    ROOMS: 0,
+    CAPACITY: 100,
+  };
+
+  var Photo = {
+    WIDTH: 45,
+    HEIGHT: 40,
+  };
+
   window.constants = {
-    MapArea: MapArea,
+    MapArea: MapRect,
     MainPinSize: MainPinSize,
-    Pin: Pin,
+    PinSize: PinSize,
     offerType: offerType,
     offerTypeToMinPrice: offerTypeToMinPrice,
+    PalaceCode: PalaceCode,
+    Photo: Photo,
   };
 })();
