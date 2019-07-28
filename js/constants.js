@@ -38,7 +38,7 @@
     CAPACITY: 100,
   };
 
-  var Photo = {
+  var PhotoSize = {
     WIDTH: 45,
     HEIGHT: 40,
   };
@@ -50,6 +50,6 @@
     offerType: offerType,
     offerTypeToMinPrice: offerTypeToMinPrice,
     PalaceCode: PalaceCode,
-    Photo: Photo,
+    PhotoSize: PhotoSize,
   };
 })();

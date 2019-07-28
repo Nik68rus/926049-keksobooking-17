@@ -4,7 +4,6 @@
   var adForm = document.querySelector('.ad-form');
   var fieldsetList = document.querySelectorAll('.ad-form fieldset');
   var filterForm = document.querySelector('.map__filters');
-  var activeFlag = false;
 
   // опишем неактивное состояние окна
 
@@ -18,7 +17,6 @@
     fieldsetList.forEach(setDisabled);
     setDisabled(adForm);
     setDisabled(filterForm);
-    activeFlag = false;
   };
 
   // опишем функцию активации окна
@@ -30,13 +28,11 @@
     loadData();
     unsetDisabled(adForm);
     unsetDisabled(filterForm);
-    activeFlag = true;
   };
 
   window.init = {
     activate: activatePage,
     disactivate: disactivatePage,
-    activeFlag: activeFlag,
   };
 
 })(window.loading.loadData, window.util.setDisabled, window.util.unsetDisabled);
