@@ -5,7 +5,6 @@
   var filterContainer = map.querySelector('.map__filters-container');
   var currentCard = map.querySelector('.map__card');
 
-
   // функция отрисовки карточки на карте
 
   var removeOptions = function (element, option) {
