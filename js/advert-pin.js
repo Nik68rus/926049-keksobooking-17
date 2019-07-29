@@ -37,8 +37,17 @@
     }
   };
 
+  var removePins = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    pins.forEach(function (pin) {
+      pinContainer.removeChild(pin);
+    });
+
+  };
+
   window.advertPin = {
     renderPins: renderPins,
     removeActivePin: removeActivePin,
+    removePins: removePins,
   };
 })(window.constants.PinSize, window.util.makeFragmentRender, window.util.removeActivePin, window.advertCard.showCard);

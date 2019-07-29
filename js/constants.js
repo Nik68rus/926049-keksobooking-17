@@ -4,6 +4,10 @@
     WIDTH: 65,
     HEIGHT: 80,
     RADIUS: 32,
+    DEFAULT_POSITION: {
+      X: 602,
+      Y: 407,
+    },
   };
 
   var MapRect = {

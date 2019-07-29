@@ -88,10 +88,12 @@
 
   var onCardClose = function () {
     var popupClose = document.querySelector('.popup__close');
-    map.removeChild(map.querySelector('.map__card'));
-    removeActivePin();
-    document.removeEventListener('keydown', onCardEscPress);
-    popupClose.removeEventListener('click', onCardClose);
+    if (popupClose !== null) {
+      map.removeChild(map.querySelector('.map__card'));
+      removeActivePin();
+      document.removeEventListener('keydown', onCardEscPress);
+      popupClose.removeEventListener('click', onCardClose);
+    }
   };
 
   var onCardEscPress = function (evt) {
@@ -114,5 +116,6 @@
 
   window.advertCard = {
     showCard: showCard,
+    onCardClose: onCardClose,
   };
 })(window.constants.offerType, window.constants.PhotoSize, window.util.removeActivePin, window.util.makeFragmentRender);
