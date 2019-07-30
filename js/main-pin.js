@@ -2,6 +2,10 @@
 (function (makeDragStart, makeDragOnce, activate, MapArea, MainPinSize) {
   var mainPin = document.querySelector('.map__pin--main');
   var address = document.querySelector('#address');
+  var mainPinDefaultPosition = {
+    x: mainPin.style.left,
+    y: mainPin.style.top,
+  };
 
   var renderMainPin = function (x, y) {
     mainPin.style.left = x + 'px';
@@ -18,8 +22,6 @@
   var renderAddress = function (coords) {
     address.value = coords.x + ', ' + coords.y;
   };
-
-  renderAddress(getMainPinCoords(MainPinSize.RADIUS));
 
   var onPinStart = function () {
     return {
@@ -40,11 +42,26 @@
 
   var onPinChange = function () {
     activate();
+    renderAddress(getMainPinCoords(MainPinSize.HEIGHT));
   };
 
   var onPinDragOnce = makeDragOnce(onPinChange);
 
+  var setDefault = function () {
+    mainPin.style.left = mainPinDefaultPosition.x;
+    mainPin.style.top = mainPinDefaultPosition.y;
+    renderAddress(getMainPinCoords(MainPinSize.RADIUS));
+    mainPin.addEventListener('mousedown', onPinDragOnce, {once: true});
+  };
+
   mainPin.addEventListener('mousedown', onPinDragOnce, {once: true});
   mainPin.addEventListener('mousedown', onPinDragStart);
+
+  window.mainPin = {
+    renderAddress: renderAddress,
+    getMainPinCoords: getMainPinCoords,
+    setDefault: setDefault,
+    onPinDragOnce: onPinDragOnce,
+  };
 
 })(window.util.makeDragStart, window.util.makeDragOnce, window.init.activate, window.constants.MapArea, window.constants.MainPinSize);

@@ -1,9 +1,5 @@
 'use strict';
-(function (load, renderPins, initFilters) {
-
-  var main = document.querySelector('main');
-  var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
-  var tryAgainButton = errorMessageTemplate.querySelector('.error__button');
+(function (load, renderPins, initFilters, showError) {
 
   var successHandler = function (data) {
     data.forEach(function (item, i) {
@@ -14,19 +10,7 @@
   };
 
   var errorHandler = function () {
-    main.appendChild(errorMessageTemplate);
-    document.addEventListener('keydown', onPopupEscPress);
-    tryAgainButton.addEventListener('click', loadData);
-  };
-
-  var closeError = function () {
-    document.removeEventListener('keydown', onPopupEscPress);
-    tryAgainButton.removeEventListener('click', loadData);
-    main.removeChild(errorMessageTemplate);
-  };
-
-  var onPopupEscPress = function (evt) {
-    window.util.isEscEvent(evt, closeError);
+    showError(loadData, null, successHandler, errorHandler);
   };
 
   var loadData = function () {
@@ -37,4 +21,4 @@
     loadData: loadData,
   };
 
-})(window.backend.load, window.advertPin.renderPins, window.filters.initFilters);
+})(window.backend.load, window.advertPin.renderPins, window.filters.initFilters, window.notification.showError);

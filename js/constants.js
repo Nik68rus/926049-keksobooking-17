@@ -33,6 +33,11 @@
     palace: 10000,
   };
 
+  var PriceLimit = {
+    MIDDLE_MIN: 10000,
+    MIDDLE_MAX: 49999,
+  };
+
   var PalaceCode = {
     ROOMS: 0,
     CAPACITY: 100,
@@ -43,13 +48,17 @@
     HEIGHT: 40,
   };
 
+  var DEBOUNCE_INTERVAL = 500;
+
   window.constants = {
     MapArea: MapRect,
     MainPinSize: MainPinSize,
     PinSize: PinSize,
     offerType: offerType,
     offerTypeToMinPrice: offerTypeToMinPrice,
+    PriceLimit: PriceLimit,
     PalaceCode: PalaceCode,
     PhotoSize: PhotoSize,
+    DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL,
   };
 })();

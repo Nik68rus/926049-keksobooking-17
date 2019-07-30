@@ -1,5 +1,5 @@
 'use strict';
-(function (offerType, PhotoSize, removeActivePin, makeFragmentRender) {
+(function (offerType, PhotoSize, removeActivePin, makeFragmentRender, removeElement) {
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var map = document.querySelector('.map');
   var filterContainer = map.querySelector('.map__filters-container');
@@ -9,9 +9,7 @@
 
   var removeOptions = function (element, option) {
     var options = element.querySelectorAll(option);
-    options.forEach(function (it) {
-      element.removeChild(it);
-    });
+    options.forEach(removeElement);
   };
 
   var renderFeature = function (feature) {
@@ -86,12 +84,18 @@
     return card;
   };
 
-  var onCardClose = function () {
+  var closeCard = function () {
     var popupClose = document.querySelector('.popup__close');
-    map.removeChild(map.querySelector('.map__card'));
-    removeActivePin();
-    document.removeEventListener('keydown', onCardEscPress);
-    popupClose.removeEventListener('click', onCardClose);
+    if (popupClose !== null) {
+      map.querySelector('.map__card').remove();
+      removeActivePin();
+      document.removeEventListener('keydown', onCardEscPress);
+      popupClose.removeEventListener('click', onCardClose);
+    }
+  };
+
+  var onCardClose = function () {
+    closeCard();
   };
 
   var onCardEscPress = function (evt) {
@@ -104,7 +108,7 @@
 
     currentCard = map.querySelector('.map__card');
     if (currentCard !== null) {
-      map.removeChild(currentCard);
+      currentCard.remove();
     }
 
     map.insertBefore(card, filterContainer);
@@ -114,5 +118,6 @@
 
   window.advertCard = {
     showCard: showCard,
+    closeCard: closeCard,
   };
-})(window.constants.offerType, window.constants.PhotoSize, window.util.removeActivePin, window.util.makeFragmentRender);
+})(window.constants.offerType, window.constants.PhotoSize, window.util.removeActivePin, window.util.makeFragmentRender, window.util.removeElement);

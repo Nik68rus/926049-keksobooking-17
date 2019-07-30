@@ -1,5 +1,5 @@
 'use strict';
-(function (PinSize, makeFragmentRender, removeActivePin, showCard) {
+(function (PinSize, makeFragmentRender, removeActivePin, removeElement, showCard) {
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinContainer = document.querySelector('.map__pins');
 
@@ -37,8 +37,14 @@
     }
   };
 
+  var removePins = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    pins.forEach(removeElement);
+  };
+
   window.advertPin = {
     renderPins: renderPins,
     removeActivePin: removeActivePin,
+    removePins: removePins,
   };
-})(window.constants.PinSize, window.util.makeFragmentRender, window.util.removeActivePin, window.advertCard.showCard);
+})(window.constants.PinSize, window.util.makeFragmentRender, window.util.removeActivePin, window.util.removeElement, window.advertCard.showCard);

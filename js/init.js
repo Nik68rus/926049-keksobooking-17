@@ -12,7 +12,7 @@
       cityMap.classList.add('map--faded');
     }
     if (!adForm.classList.contains('ad-form--disabled')) {
-      adForm.classList.remove('ad-form--disabled');
+      adForm.classList.add('ad-form--disabled');
     }
     fieldsetList.forEach(setDisabled);
     setDisabled(adForm);

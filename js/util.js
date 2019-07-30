@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+(function (DEBOUNCE_INTERVAL) {
   var isEscapeKey = function (evt) {
     return evt.key === 'Escape' || evt.key === 'Esc';
   };
@@ -23,6 +23,10 @@
 
   var hideElement = function (element) {
     element.classList.add('hidden');
+  };
+
+  var removeElement = function (element) {
+    element.remove();
   };
 
   var makeDragStart = function (onStart, onMove) {
@@ -84,6 +88,20 @@
     }
   };
 
+  var debounce = function (cb) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
+
   window.util = {
     isEscEvent: function (evt, action) {
       return isEscapeKey(evt) && action();
@@ -100,6 +118,8 @@
     makeFragmentRender: makeFragmentRender,
     showElement: showElement,
     hideElement: hideElement,
+    removeElement: removeElement,
     removeActivePin: removeActivePin,
+    debounce: debounce,
   };
-})();
+})(window.constants.DEBOUNCE_INTERVAL);
