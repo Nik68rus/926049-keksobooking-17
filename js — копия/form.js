@@ -1,7 +1,6 @@
 'use strict';
 (function (offerTypeToMinPrice, PalaceCode, showElement, hideElement, setDefault, removePins, closeCard, save, disactivate, showSuccess, showError) {
   var adForm = document.querySelector('.ad-form');
-  var filtersForm = document.querySelector('.map__filters');
   var placeTypeInput = adForm.querySelector('#type');
   var priceInput = adForm.querySelector('#price');
   var timeInSelect = adForm.querySelector('#timein');
@@ -28,10 +27,6 @@
     timeInSelect.value = timeOutSelect.value;
   };
 
-  var onCapacityChange = function () {
-    validateGuests();
-  }
-
   // зависимость количества гостей от количества комнат
 
   var onRoomChange = function () {
@@ -47,33 +42,6 @@
         showElement(capacityInput.options[capacityInput.options.length - 1]);
       }
     }
-    validateGuests();
-  };
-
-  var validateGuests = function () {
-    if (checkCapacity() === false) {
-      capacityInput.setCustomValidity('Некорректное соотношение гостей и комнат');
-    } else {
-      capacityInput.setCustomValidity('');
-    }
-  };
-
-  var checkCapacity = function () {
-    var roomNumber = +roomNumberInput.value;
-    var capacity = +capacityInput.value;
-    if (roomNumber === PalaceCode.ROOMS) {
-      if (capacity === PalaceCode.CAPACITY) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      if (capacity <= roomNumber) {
-        return true;
-      } else {
-        return false;
-      }
-    }
   };
 
   var initForm = function () {
@@ -84,7 +52,6 @@
 
   var resetPage = function () {
     adForm.reset();
-    filtersForm.reset();
     cleanMap();
     disactivate();
     setDefault();
@@ -112,7 +79,6 @@
   timeInSelect.addEventListener('change', onTimeInChange);
   timeOutSelect.addEventListener('change', onTimeOutChange);
   roomNumberInput.addEventListener('change', onRoomChange);
-  capacityInput.addEventListener('change', onCapacityChange);
   cleanFormButton.addEventListener('click', onClearFormClick);
   adForm.addEventListener('submit', function (evt) {
     save(new FormData(adForm), onSuccess, onError);

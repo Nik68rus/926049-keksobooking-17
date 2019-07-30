@@ -48,8 +48,6 @@
     HEIGHT: 40,
   };
 
-  var DEBOUNCE_INTERVAL = 500;
-
   window.constants = {
     MapArea: MapRect,
     MainPinSize: MainPinSize,
@@ -59,6 +57,5 @@
     PriceLimit: PriceLimit,
     PalaceCode: PalaceCode,
     PhotoSize: PhotoSize,
-    DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL,
   };
 })();

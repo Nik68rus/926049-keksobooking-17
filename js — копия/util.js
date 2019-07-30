@@ -1,6 +1,6 @@
 'use strict';
 
-(function (DEBOUNCE_INTERVAL) {
+(function () {
   var isEscapeKey = function (evt) {
     return evt.key === 'Escape' || evt.key === 'Esc';
   };
@@ -88,20 +88,6 @@
     }
   };
 
-  var debounce = function (cb) {
-    var lastTimeout = null;
-
-    return function () {
-      var parameters = arguments;
-      if (lastTimeout) {
-        clearTimeout(lastTimeout);
-      }
-      lastTimeout = window.setTimeout(function () {
-        cb.apply(null, parameters);
-      }, DEBOUNCE_INTERVAL);
-    };
-  };
-
   window.util = {
     isEscEvent: function (evt, action) {
       return isEscapeKey(evt) && action();
@@ -120,6 +106,5 @@
     hideElement: hideElement,
     removeElement: removeElement,
     removeActivePin: removeActivePin,
-    debounce: debounce,
   };
-})(window.constants.DEBOUNCE_INTERVAL);
+})();
