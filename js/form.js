@@ -30,7 +30,7 @@
 
   var onCapacityChange = function () {
     validateGuests();
-  }
+  };
 
   // зависимость количества гостей от количества комнат
 
