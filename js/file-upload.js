@@ -5,9 +5,10 @@
   var avatar = document.querySelector('.ad-form-header__preview img');
   var photoContainer = document.querySelector('.ad-form__photo-container');
   var picPreviewTemplate = document.querySelector('.ad-form__photo');
+  var picDropZone = document.querySelector('.ad-form__drop-zone');
+  var avatarDropZone = document.querySelector('.ad-form-header__drop-zone');
 
-  var loadFile = function (source, cb) {
-    var file = source.files[0];
+  var loadFile = function (file, cb) {
     var fileName = file.name.toLowerCase();
 
     var matches = FILE_TYPES.some(function (it) {
@@ -55,12 +56,35 @@
   };
 
   avaChooser.addEventListener('change', function () {
-    loadFile(avaChooser, onAvatarLoad);
+    loadFile(avaChooser.files[0], onAvatarLoad);
   });
 
   picChooser.addEventListener('change', function () {
-    loadFile(picChooser, onPicLoad);
+    loadFile(picChooser.files[0], onPicLoad);
   });
+
+  var onDrag = function (evt) {
+    evt.preventDefault();
+  };
+
+  var onPicDrop = function (evt) {
+    evt.preventDefault();
+    loadFile(evt.dataTransfer.files[0], onPicLoad);
+  };
+
+  var onAvatarDrop = function (evt) {
+    evt.preventDefault();
+    loadFile(evt.dataTransfer.files[0], onAvatarLoad);
+  };
+
+  picDropZone.addEventListener('dragenter', onDrag);
+  picDropZone.addEventListener('dragover', onDrag);
+  picDropZone.addEventListener('drop', onPicDrop);
+
+  avatarDropZone.addEventListener('dragenter', onDrag);
+  avatarDropZone.addEventListener('dragover', onDrag);
+  avatarDropZone.addEventListener('drop', onAvatarDrop);
+
 
   window.fileUpload = {
     resetUploadedPics: resetUploadedPics,
