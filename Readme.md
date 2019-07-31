@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Никита Ларичкин](https://up.htmlacademy.ru/javascript/17/user/926049).
-* Наставник: [Андрей Рыжаков](https://htmlacademy.ru/profile/id201015).
+* Наставник: [Александр Мастеров](https://htmlacademy.ru/profile/id912463).
 
 ---
 

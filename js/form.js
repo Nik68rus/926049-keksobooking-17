@@ -1,5 +1,5 @@
 'use strict';
-(function (offerTypeToMinPrice, PalaceCode, showElement, hideElement, setDefault, removePins, closeCard, save, disactivate, showSuccess, showError) {
+(function (offerTypeToMinPrice, PalaceCode, showElement, hideElement, setDefault, removePins, closeCard, resetUploadedPics, save, disactivate, showSuccess, showError) {
   var adForm = document.querySelector('.ad-form');
   var filtersForm = document.querySelector('.map__filters');
   var placeTypeInput = adForm.querySelector('#type');
@@ -84,6 +84,7 @@
 
   var resetPage = function () {
     adForm.reset();
+    resetUploadedPics();
     filtersForm.reset();
     cleanMap();
     disactivate();
@@ -130,6 +131,7 @@
     window.mainPin.setDefault,
     window.advertPin.removePins,
     window.advertCard.closeCard,
+    window.fileUpload.resetUploadedPics,
     window.backend.save,
     window.init.disactivate,
     window.notification.showSuccess,

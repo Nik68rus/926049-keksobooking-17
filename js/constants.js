@@ -48,6 +48,21 @@
     HEIGHT: 40,
   };
 
+  var PicPreviewSize = {
+    WIDTH: 70,
+    HEIGHT: 70,
+    BORDER_RADIUS: 5,
+  };
+
+  var FILE_TYPES = [
+    'gif',
+    'jpg',
+    'jpeg',
+    'png',
+  ];
+
+  var DEFAULT_AVATAR = 'img/muffin-grey.svg';
+
   var DEBOUNCE_INTERVAL = 500;
 
   window.constants = {
@@ -59,6 +74,9 @@
     PriceLimit: PriceLimit,
     PalaceCode: PalaceCode,
     PhotoSize: PhotoSize,
+    PicPreviewSize: PicPreviewSize,
+    FILE_TYPES: FILE_TYPES,
+    DEFAULT_AVATAR: DEFAULT_AVATAR,
     DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL,
   };
 })();
